@@ -135,7 +135,7 @@ function renderStep() {
       </div>
       <div class="row">
         <label>Eerder vandaag om:</label>
-        <input type="time" value="${timeStr(sel.tMin)}" onchange="const p=this.value.split(':').map(Number);sel.tMin=p[0]*60+p[1];renderStep()">
+        <input type="time" value="${timeStr(sel.tMin)}" onchange="const p=this.value.split(':').map(Number);sel.tMin=p[0]*60+p[1];">
       </div>
       <button class="btn-primary" onclick="step=2;renderStep()">Volgende →</button>
       <button class="btn-ghost" onclick="step=0;renderStep()">← Terug</button>`;
