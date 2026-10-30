@@ -199,7 +199,7 @@ function renderAll() {
   });
   let gp = total[0]; total.forEach(v => { if (v.c > gp.c) gp = v; });
   let endT = null;
-  for (let i = 0; i <= total.length; i++) {
+for (let i = 0; i < total.length; i++) {
     if (total[i].t > gp.t && total[i].c < thresh) { endT = total[i].t; break; }
   }
   if (endT === null) endT = t1;
