@@ -16,7 +16,6 @@
   h1 { font-size: 1.4rem; margin-bottom: 4px; }
   .sub { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
   .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
-  .disclaimer { background: #3a2f14; border: 1px solid var(--warn); border-radius: var(--radius); padding: 12px 14px; font-size: .8rem; color: var(--warn); margin-bottom: 14px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
   .stat { background: var(--card); border-radius: var(--radius); padding: 14px; }
   .stat .k { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
@@ -38,8 +37,6 @@
   .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
   label { font-size: .85rem; color: var(--muted); }
   input[type="time"] { height: 46px; background: var(--card2); border: 1px solid #334155; color: var(--text); border-radius: 10px; padding: 10px; font-size: 1rem; }
-  .toggle { display: flex; align-items: center; gap: 8px; background: var(--card2); border-radius: 10px; padding: 12px 14px; cursor: pointer; font-size: .95rem; }
-  .toggle input { width: 20px; height: 20px; accent-color: var(--accent); }
   .btn-primary { width: 100%; background: var(--accent); color: #082f49; border: none; border-radius: 12px; padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px; }
   .btn-ghost { width: 100%; background: transparent; color: var(--muted); border: none; padding: 12px; cursor: pointer; font-size: .9rem; }
   svg { width: 100%; height: auto; display: block; }
@@ -81,8 +78,8 @@ const KA_FAST = 1.3, KA_FED = 0.65, FED_SCALE = 0.85;
 const DELAY_RETARD = 3.5, DELAY_RETARD_FED = 4.0;
 const WORN_OFF_FRAC = 0.10;
 const MEDS = {
-  medikinet: { name: "Medikinet Retard 10 mg", icon: "💊", color: "var(--med)", hex: "#38bdf8" },
-  ritalin:   { name: "Ritalin 10 mg",            icon: "💉", color: "var(--rit)", hex: "#c084fc" },
+  medikinet: { name: "Medikinet Retard 10 mg", icon: "💊", hex: "#38bdf8" },
+  ritalin:   { name: "Ritalin 10 mg",            icon: "💉", hex: "#c084fc" },
 };
 
 function bateman(t, ka) { if (t <= 0) return 0; return Math.exp(-KE*t) - Math.exp(-ka*t); }
@@ -143,15 +140,10 @@ function renderStep() {
       <button class="btn-primary" onclick="step=2;renderStep()">Volgende →</button>
       <button class="btn-ghost" onclick="step=0;renderStep()">← Terug</button>`;
   } else {
-    const m = MEDS[sel.type];
     title.textContent = "Heb je gegeten bij de inname?";
     body.innerHTML = `
-      <div class="row">
-        <div class="toggle" onclick="sel.fed=!sel.fed;renderStep()">
-          <input type="checkbox" ${sel.fed?'checked':''} onchange="sel.fed=this.checked">
-          <span>${sel.fed ? "🍽️ Ja, gegeten" : "🚫 Nee, op lege maag"}</span>
-        </div>
-      </div>
+      <button class="opt ${sel.fed?'sel':''}" onclick="sel.fed=true;renderStep()"><span class="icon">🍽️</span><span>Ja, ik heb gegeten</span></button>
+      <button class="opt ${!sel.fed?'sel':''}" onclick="sel.fed=false;renderStep()"><span class="icon">🚫</span><span>Nee, op lege maag</span></button>
       <p class="sub" style="margin-top:6px">Voedsel vertraagt de opname: de piek komt iets later en is iets lager.</p>
       <button class="btn-primary" onclick="addIntake()">✓ Toevoegen</button>
       <button class="btn-ghost" onclick="step=1;renderStep()">← Terug</button>`;
@@ -200,10 +192,10 @@ function renderAll() {
   const max = Math.max(...total.map(v=>v.c));
   const thresh = WORN_OFF_FRAC * max;
 
-  const peakInfo = per.map((arr, j) => {
+  const peakInfo = per.map((arr) => {
     let p = arr[0];
     for (let i = 1; i < arr.length; i++) if (arr[i].c > p.c) p = arr[i];
-    return { idx: j, t: p.t, c: p.c };
+    return { t: p.t, c: p.c };
   });
   let gp = total[0]; total.forEach(v => { if (v.c > gp.c) gp = v; });
   let endT = null;
