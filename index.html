@@ -8,29 +8,43 @@
   :root {
     --bg: #0f172a; --card: #1e293b; --card2: #273549;
     --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
-    --good: #4ade80; --warn: #fbbf24; --bad: #f87171; --radius: 14px;
+    --good: #4ade80; --warn: #fbbf24; --bad: #f87171;
+    --med: #38bdf8; --rit: #c084fc; --radius: 14px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
-  body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; max-width: 720px; margin: 0 auto; }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 90px; }
   h1 { font-size: 1.4rem; margin-bottom: 4px; }
   .sub { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
   .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
-  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
-  .field { flex: 1; min-width: 130px; }
-  label { font-size: .8rem; color: var(--muted); display: block; margin-bottom: 4px; }
-  input[type="time"] { width: 100%; height: 46px; background: var(--card2); border: 1px solid #334155; color: var(--text); border-radius: 10px; padding: 10px; font-size: 1rem; }
-  .check { display: flex; align-items: center; gap: 8px; font-size: .9rem; color: var(--text); padding-bottom: 12px; }
-  .check input { width: 20px; height: 20px; accent-color: var(--accent); }
-  button { background: var(--accent); color: #082f49; border: none; border-radius: 10px; padding: 12px 20px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; }
-  button:hover { filter: brightness(1.1); }
+  .disclaimer { background: #3a2f14; border: 1px solid var(--warn); border-radius: var(--radius); padding: 12px 14px; font-size: .8rem; color: var(--warn); margin-bottom: 14px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
   .stat { background: var(--card); border-radius: var(--radius); padding: 14px; }
   .stat .k { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
-  .stat .v { font-size: 1.2rem; font-weight: 600; margin-top: 4px; }
-  .disclaimer { background: #3a2f14; border: 1px solid var(--warn); border-radius: var(--radius); padding: 12px 14px; font-size: .8rem; color: var(--warn); margin-bottom: 14px; }
+  .stat .v { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
+  .chip { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--muted); }
+  .chip .icon { font-size: 1.5rem; }
+  .chip .grow { flex: 1; }
+  .chip .t { font-weight: 600; }
+  .chip .d { color: var(--muted); font-size: .8rem; }
+  .chip button { background: transparent; color: var(--bad); border: none; font-size: 1.1rem; cursor: pointer; padding: 4px 8px; }
+  #fab { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #082f49; border: none; border-radius: 999px; padding: 16px 28px; font-size: 1.05rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(56,189,248,.35); }
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: flex-end; justify-content: center; z-index: 10; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--card); border-radius: 20px 20px 0 0; width: 100%; max-width: 720px; padding: 20px; }
+  .modal h2 { font-size: 1.1rem; margin-bottom: 14px; }
+  .opt { display: flex; align-items: center; gap: 12px; width: 100%; background: var(--card2); color: var(--text); border: 2px solid transparent; border-radius: var(--radius); padding: 16px; font-size: 1.05rem; font-weight: 600; cursor: pointer; margin-bottom: 10px; text-align: left; }
+  .opt.sel { border-color: var(--accent); }
+  .opt .icon { font-size: 1.6rem; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
+  label { font-size: .85rem; color: var(--muted); }
+  input[type="time"] { height: 46px; background: var(--card2); border: 1px solid #334155; color: var(--text); border-radius: 10px; padding: 10px; font-size: 1rem; }
+  .toggle { display: flex; align-items: center; gap: 8px; background: var(--card2); border-radius: 10px; padding: 12px 14px; cursor: pointer; font-size: .95rem; }
+  .toggle input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .btn-primary { width: 100%; background: var(--accent); color: #082f49; border: none; border-radius: 12px; padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px; }
+  .btn-ghost { width: 100%; background: transparent; color: var(--muted); border: none; padding: 12px; cursor: pointer; font-size: .9rem; }
   svg { width: 100%; height: auto; display: block; }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin-top: 8px; }
-  .legend span::before { content: "●"; margin-right: 5px; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin-top: 8px; }
+  .legend span::before { content: "—"; margin-right: 5px; font-weight: 700; }
   .hidden { display: none; }
 </style>
 </head>
@@ -39,166 +53,205 @@
 <h1>💊 Medicatie Curve</h1>
 <p class="sub">Indicatieve projectie van methylfenidaat in bloed, op basis van gemiddelde farmacokinetiek.</p>
 
-<div class="disclaimer">⚠️ Dit is een <b>indicatieve schatting</b> op basis van gepubliceerde gemiddelden (Ritalin: piek ~1,5–2 u, uitgewerkt na ~4 u · Medikinet Retard: dubbele piek ~1,5–2 u en ~5–6 u, uitgewerkt na ~8 u). Voedsel kan de absorptie vertragen. Geen medisch advies — bespreek je schema met je arts of apotheker.</div>
-
-<div class="card">
-  <div class="row">
-    <div class="field">
-      <label>💊 Medikinet Retard 10 mg — ingenomen om</label>
-      <input type="time" id="t-medikinet">
-    </div>
-    <div class="check"><input type="checkbox" id="food-medikinet"><label for="food-medikinet" style="margin:0">Gegeten bij inname</label></div>
-  </div>
-  <div class="row" style="margin-top:12px">
-    <div class="field">
-      <label>💊 Ritalin 10 mg (booster, optioneel) — om</label>
-      <input type="time" id="t-ritalin">
-    </div>
-    <div class="check"><input type="checkbox" id="food-ritalin"><label for="food-ritalin" style="margin:0">Gegeten bij inname</label></div>
-  </div>
-  <div style="margin-top:12px"><button onclick="render()">Toon curve</button></div>
-</div>
+<div id="intakes"></div>
 
 <div id="results" class="hidden">
   <div class="grid">
-    <div class="stat"><div class="k">Geschatte piek(en)</div><div class="v" id="st-peak">–</div></div>
+    <div class="stat"><div class="k">Piek(en)</div><div class="v" id="st-peak">–</div></div>
     <div class="stat"><div class="k">Geschat uitgewerkt om</div><div class="v" id="st-end">–</div></div>
-    <div class="stat"><div class="k">Werkingsduur (totaal)</div><div class="v" id="st-dur">–</div></div>
   </div>
   <div class="card">
     <div id="chart"></div>
-    <div class="legend">
-      <span style="color:var(--accent)">Totale curve</span>
-      <span style="color:var(--warn)">Piek</span>
-      <span style="color:var(--good)">Nu</span>
-      <span style="color:var(--bad)">Uitgewerkt</span>
-    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+
+<button id="fab" onclick="openModal()">＋ Pil ingenomen</button>
+
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h2 id="m-title">Welke medicatie?</h2>
+    <div id="m-body"></div>
   </div>
 </div>
 
 <script>
 const KE = Math.LN2 / 2.5;
-const KA_FAST = 1.3;
-const KA_FED  = 0.65;
-const FED_SCALE = 0.85;
-const DELAY_RETARD = 3.5;
-const DELAY_RETARD_FED = 4.0;
+const KA_FAST = 1.3, KA_FED = 0.65, FED_SCALE = 0.85;
+const DELAY_RETARD = 3.5, DELAY_RETARD_FED = 4.0;
 const WORN_OFF_FRAC = 0.10;
+const MEDS = {
+  medikinet: { name: "Medikinet Retard 10 mg", icon: "💊", color: "var(--med)", hex: "#38bdf8" },
+  ritalin:   { name: "Ritalin 10 mg",            icon: "💉", color: "var(--rit)", hex: "#c084fc" },
+};
 
-function bateman(t, ka) {
-  if (t <= 0) return 0;
-  return Math.exp(-KE * t) - Math.exp(-ka * t);
+function bateman(t, ka) { if (t <= 0) return 0; return Math.exp(-KE*t) - Math.exp(-ka*t); }
+
+function intakeCurve(ik, tMin) {
+  const dt = tMin - ik.tMin;
+  const ka = ik.fed ? KA_FED : KA_FAST;
+  const s = ik.fed ? FED_SCALE : 1;
+  if (ik.type === "ritalin") return s * bateman(dt/60, ka);
+  const d = ik.fed ? DELAY_RETARD_FED : DELAY_RETARD;
+  return 0.5*s*bateman(dt/60, ka) + 0.5*s*bateman(dt/60 - d, ka);
 }
 
-function curveAt(tMin, intakes) {
-  let c = 0;
-  intakes.forEach(ik => {
-    const dt = tMin - ik.tMin;
-    const ka = ik.fed ? KA_FED : KA_FAST;
-    const s = ik.fed ? FED_SCALE : 1;
-    if (ik.type === "ritalin") {
-      c += s * bateman(dt / 60, ka);
-    } else {
-      const d = ik.fed ? DELAY_RETARD_FED : DELAY_RETARD;
-      c += 0.5 * s * bateman(dt / 60, ka);
-      c += 0.5 * s * bateman((dt / 60) - d, ka);
-    }
-  });
-  return c;
+function todayKey() { return new Date().toISOString().slice(0,10); }
+function loadIntakes() {
+  try {
+    const d = JSON.parse(localStorage.getItem("medcurve") || "{}");
+    return d.date === todayKey() ? d.intakes : [];
+  } catch { return []; }
 }
+function saveIntakes(list) {
+  localStorage.setItem("medcurve", JSON.stringify({ date: todayKey(), intakes: list }));
+}
+let intakes = loadIntakes();
 
 function timeStr(minOfDay) {
   const m = ((Math.round(minOfDay) % 1440) + 1440) % 1440;
-  const h = Math.floor(m / 60), mm = m % 60;
-  return String(h).padStart(2, "0") + ":" + String(mm).padStart(2, "0");
+  return String(Math.floor(m/60)).padStart(2,"0") + ":" + String(m%60).padStart(2,"0");
 }
 
-function parseTime(id) {
-  const v = document.getElementById(id).value;
-  if (!v) return null;
-  const [h, m] = v.split(":").map(Number);
-  return h * 60 + m;
-}
+let step = 0, sel = { type: null, tMin: null, fed: false };
+function openModal() { step = 0; sel = { type: null, tMin: null, fed: false }; renderStep(); document.getElementById("modal-bg").classList.add("open"); }
+function closeModal() { document.getElementById("modal-bg").classList.remove("open"); }
 
-function render() {
-  const tM = parseTime("t-medikinet");
-  if (tM === null) { alert("Vul eerst het tijdstip van Medikinet in."); return; }
-  const tR = parseTime("t-ritalin");
-  const intakes = [{ type: "medikinet", tMin: tM, fed: document.getElementById("food-medikinet").checked }];
-  if (tR !== null) intakes.push({ type: "ritalin", tMin: tR, fed: document.getElementById("food-ritalin").checked });
-
-  const first = Math.min(...intakes.map(i => i.tMin));
-  const last = Math.max(...intakes.map(i => i.tMin));
-  const t0 = first - 30, t1 = last + 12 * 60;
-  const N = 720;
-  const vals = [];
-  for (let i = 0; i <= N; i++) {
-    const t = t0 + (t1 - t0) * i / N;
-    vals.push({ t, c: curveAt(t, intakes) });
+function renderStep() {
+  const title = document.getElementById("m-title"), body = document.getElementById("m-body");
+  if (step === 0) {
+    title.textContent = "Welke medicatie?";
+    body.innerHTML = Object.entries(MEDS).map(([k, m]) =>
+      `<button class="opt ${sel.type===k?'sel':''}" onclick="sel.type='${k}';step=1;renderStep()">
+        <span class="icon">${m.icon}</span><span>${m.name}</span></button>`).join("") +
+      `<button class="btn-ghost" onclick="closeModal()">Annuleren</button>`;
+  } else if (step === 1) {
+    const m = MEDS[sel.type];
+    const now = new Date();
+    const nowMin = now.getHours()*60 + now.getMinutes();
+    if (sel.tMin === null) sel.tMin = nowMin;
+    const nowStr = String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+    title.textContent = m.name + " — wanneer?";
+    body.innerHTML = `
+      <div class="row">
+        <button class="opt ${sel.tMin===nowMin?'sel':''}" style="flex:1" onclick="sel.tMin=${nowMin};renderStep()"><span class="icon">⏱️</span><span>Nu (${nowStr})</span></button>
+      </div>
+      <div class="row">
+        <label>Eerder vandaag om:</label>
+        <input type="time" value="${timeStr(sel.tMin)}" onchange="const p=this.value.split(':').map(Number);sel.tMin=p[0]*60+p[1];renderStep()">
+      </div>
+      <button class="btn-primary" onclick="step=2;renderStep()">Volgende →</button>
+      <button class="btn-ghost" onclick="step=0;renderStep()">← Terug</button>`;
+  } else {
+    const m = MEDS[sel.type];
+    title.textContent = "Heb je gegeten bij de inname?";
+    body.innerHTML = `
+      <div class="row">
+        <div class="toggle" onclick="sel.fed=!sel.fed;renderStep()">
+          <input type="checkbox" ${sel.fed?'checked':''} onchange="sel.fed=this.checked">
+          <span>${sel.fed ? "🍽️ Ja, gegeten" : "🚫 Nee, op lege maag"}</span>
+        </div>
+      </div>
+      <p class="sub" style="margin-top:6px">Voedsel vertraagt de opname: de piek komt iets later en is iets lager.</p>
+      <button class="btn-primary" onclick="addIntake()">✓ Toevoegen</button>
+      <button class="btn-ghost" onclick="step=1;renderStep()">← Terug</button>`;
   }
-  const max = Math.max(...vals.map(v => v.c));
+}
+
+function addIntake() {
+  intakes.push({ id: Date.now()+Math.random().toString(36).slice(2,6), type: sel.type, tMin: sel.tMin, fed: sel.fed });
+  intakes.sort((a,b) => a.tMin - b.tMin);
+  saveIntakes(intakes);
+  closeModal();
+  renderAll();
+}
+
+function removeIntake(id) {
+  intakes = intakes.filter(i => i.id !== id);
+  saveIntakes(intakes);
+  renderAll();
+}
+
+function renderAll() {
+  const box = document.getElementById("intakes");
+  box.innerHTML = intakes.length ? intakes.map(ik => {
+    const m = MEDS[ik.type];
+    return `<div class="chip" style="border-left-color:${m.hex}">
+      <span class="icon">${m.icon}</span>
+      <div class="grow"><div class="t">${m.name}</div>
+      <div class="d">${timeStr(ik.tMin)} · ${ik.fed ? "🍽️ gegeten" : "op lege maag"}</div></div>
+      <button onclick="removeIntake('${ik.id}')">✕</button>
+    </div>`;
+  }).join("") : '<p class="sub">Nog geen inname vandaag. Tik onderaan op "＋ Pil ingenomen".</p>';
+
+  if (!intakes.length) { document.getElementById("results").classList.add("hidden"); return; }
+  document.getElementById("results").classList.remove("hidden");
+
+  const first = Math.min(...intakes.map(i=>i.tMin));
+  const last = Math.max(...intakes.map(i=>i.tMin));
+  const t0 = first - 30, t1 = last + 12*60, N = 720;
+  const total = [], per = intakes.map(ik => []);
+  for (let i = 0; i <= N; i++) {
+    const t = t0 + (t1-t0)*i/N;
+    let sum = 0;
+    per.forEach((arr, j) => { const c = intakeCurve(intakes[j], t); arr.push({t, c}); sum += c; });
+    total.push({t, c: sum});
+  }
+  const max = Math.max(...total.map(v=>v.c));
   const thresh = WORN_OFF_FRAC * max;
 
-  const peaks = [];
-  for (let i = 1; i < N; i++) {
-    if (vals[i].c >= vals[i-1].c && vals[i].c > vals[i+1].c && vals[i].c >= 0.55 * max) peaks.push(vals[i]);
-  }
-  const merged = [];
-  peaks.forEach(p => {
-    if (!merged.length || p.t - merged[merged.length-1].t > 60) merged.push(p);
-    else if (p.c > merged[merged.length-1].c) merged[merged.length-1] = p;
+  const peakInfo = per.map((arr, j) => {
+    let p = arr[0];
+    for (let i = 1; i < arr.length; i++) if (arr[i].c > p.c) p = arr[i];
+    return { idx: j, t: p.t, c: p.c };
   });
-  const globalPeak = merged.length ? merged.reduce((a,b) => a.c > b.c ? a : b) : vals.reduce((a,b) => a.c > b.c ? a : b, vals[0]);
-
+  let gp = total[0]; total.forEach(v => { if (v.c > gp.c) gp = v; });
   let endT = null;
-  for (let i = 0; i <= N; i++) {
-    if (vals[i].t > globalPeak.t && vals[i].c < thresh) { endT = vals[i].t; break; }
+  for (let i = 0; i <= total.length; i++) {
+    if (total[i].t > gp.t && total[i].c < thresh) { endT = total[i].t; break; }
   }
   if (endT === null) endT = t1;
 
-  document.getElementById("results").classList.remove("hidden");
-  document.getElementById("st-peak").textContent = merged.length
-    ? merged.map(p => timeStr(p.t)).join(" en ") : "–";
+  document.getElementById("st-peak").textContent = peakInfo.map(p => timeStr(p.t)).join(" · ");
   document.getElementById("st-end").textContent = timeStr(endT);
-  const durMin = endT - first;
-  document.getElementById("st-dur").textContent = Math.floor(durMin/60) + " u " + (durMin%60) + " min";
 
-  const W = 700, H = 260, padL = 44, padR = 12, padT = 18, padB = 30;
-  const x = t => padL + (t - t0) / (t1 - t0) * (W - padL - padR);
-  const y = c => H - padB - (c / max) * (H - padT - padB);
-  const path = vals.map((v, i) => (i ? "L" : "M") + x(v.t).toFixed(1) + "," + y(v.c).toFixed(1)).join(" ");
-
+  const W = 700, H = 260, padL = 40, padR = 12, padT = 18, padB = 30;
+  const x = t => padL + (t - t0)/(t1 - t0) * (W - padL - padR);
+  const y = c => H - padB - (c/max) * (H - padT - padB);
   let grid = "";
   for (let t = Math.ceil(t0/60)*60; t <= t1; t += 60) {
-    grid += `<line x1="${x(t)}" y1="${padT}" x2="${x(t)}" y2="${H-padB}" stroke="#334155" stroke-width="1"/>
+    grid += `<line x1="${x(t)}" y1="${padT}" x2="${x(t)}" y2="${H-padB}" stroke="#334155"/>
              <text x="${x(t)}" y="${H-10}" fill="#94a3b8" font-size="10" text-anchor="middle">${timeStr(t)}</text>`;
   }
-  for (let f = 0; f <= 1.0001; f += 0.25) {
-    grid += `<line x1="${padL}" y1="${y(max*f)}" x2="${W-padR}" y2="${y(max*f)}" stroke="#1e293b" stroke-width="1"/>`;
-  }
+  let paths = "";
+  per.forEach((arr, j) => {
+    const m = MEDS[intakes[j].type];
+    const d = arr.map((v,i) => (i?"L":"M") + x(v.t).toFixed(1) + "," + y(v.c).toFixed(1)).join(" ");
+    paths += `<path d="${d}" fill="none" stroke="${m.hex}" stroke-width="2.5"/>`;
+    const p = peakInfo[j];
+    paths += `<circle cx="${x(p.t)}" cy="${y(p.c)}" r="5" fill="${m.hex}"/>
+             <text x="${x(p.t)}" y="${y(p.c)-10}" fill="${m.hex}" font-size="11" text-anchor="middle">${timeStr(p.t)}</text>`;
+  });
+  const dTot = total.map((v,i) => (i?"L":"M") + x(v.t).toFixed(1) + "," + y(v.c).toFixed(1)).join(" ");
   const now = new Date(); const nowMin = now.getHours()*60 + now.getMinutes();
   const nowLine = (t0 <= nowMin && nowMin <= t1)
     ? `<line x1="${x(nowMin)}" y1="${padT}" x2="${x(nowMin)}" y2="${H-padB}" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,4"/>
        <text x="${x(nowMin)}" y="${padT+12}" fill="#4ade80" font-size="11" text-anchor="middle">nu</text>` : "";
-  const peakDots = merged.map(p =>
-    `<circle cx="${x(p.t)}" cy="${y(p.c)}" r="5" fill="#fbbf24"/>
-     <text x="${x(p.t)}" y="${y(p.c)-10}" fill="#fbbf24" font-size="11" text-anchor="middle">${timeStr(p.t)}</text>`).join("");
   const endMark = `<line x1="${x(endT)}" y1="${padT}" x2="${x(endT)}" y2="${H-padB}" stroke="#f87171" stroke-width="2" stroke-dasharray="3,4"/>
      <text x="${x(endT)}" y="${H-10}" fill="#f87171" font-size="10" text-anchor="middle">${timeStr(endT)}</text>`;
 
   document.getElementById("chart").innerHTML =
     `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
       ${grid}
-      <path d="${path}" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
-      ${nowLine}${peakDots}${endMark}
+      <path d="${dTot}" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
+      ${paths}${nowLine}${endMark}
     </svg>`;
+  document.getElementById("legend").innerHTML =
+    intakes.map(ik => `<span style="color:${MEDS[ik.type].hex}">${MEDS[ik.type].icon} ${timeStr(ik.tMin)}</span>`).join("") +
+    `<span style="color:#e2e8f0">totale curve</span><span style="color:var(--good)">nu</span><span style="color:var(--bad)">uitgewerkt</span>`;
 }
 
-(function init() {
-  const now = new Date();
-  const v = String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
-  document.getElementById("t-medikinet").value = v;
-})();
+renderAll();
 </script>
 </body>
 </html>
