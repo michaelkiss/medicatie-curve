@@ -2,78 +2,111 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Medicatie Curve</title>
 <style>
   :root {
-    --bg: #0f172a; --card: #1e293b; --card2: #273549;
-    --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
-    --good: #4ade80; --warn: #fbbf24; --bad: #f87171;
-    --med: #38bdf8; --rit: #c084fc; --radius: 14px;
+    --bg: #f2f2f7;
+    --card: #ffffff;
+    --text: #000000;
+    --muted: #8e8e93;
+    --sep: #c6c6c8;
+    --ios-blue: #007aff;
+    --good: #34c759;
+    --warn: #ff9500;
+    --bad: #ff3b30;
+    --med: #007aff;
+    --rit: #af52de;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
-  body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 90px; }
-  h1 { font-size: 1.4rem; margin-bottom: 4px; }
-  .sub { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
-  .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
-  .stat { background: var(--card); border-radius: var(--radius); padding: 14px; }
-  .stat .k { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
-  .stat .v { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
-  .chip { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--muted); }
-  .chip .icon { font-size: 1.5rem; }
-  .chip .grow { flex: 1; }
-  .chip .t { font-weight: 600; }
-  .chip .d { color: var(--muted); font-size: .8rem; }
-  .chip button { background: transparent; color: var(--bad); border: none; font-size: 1.1rem; cursor: pointer; padding: 4px 8px; }
-  #fab { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #082f49; border: none; border-radius: 999px; padding: 16px 28px; font-size: 1.05rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(56,189,248,.35); }
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: flex-end; justify-content: center; z-index: 10; }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --card: #1c1c1e;
+      --text: #ffffff;
+      --muted: #8e8e93;
+      --sep: #38383a;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 100px; }
+  .nav-title { font-size: 17px; font-weight: 600; text-align: center; padding: 12px 0 4px; }
+  .large-title { font-size: 34px; font-weight: 700; padding: 4px 16px 12px; letter-spacing: .3px; }
+  .section-head { font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding: 18px 20px 6px; }
+  .group { background: var(--card); margin: 0 16px; border-radius: 12px; overflow: hidden; }
+  .row-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--sep); min-height: 48px; }
+  .row-item:last-child { border-bottom: none; }
+  .icon { font-size: 22px; width: 30px; text-align: center; }
+  .grow { flex: 1; min-width: 0; }
+  .t { font-size: 17px; }
+  .d { font-size: 13px; color: var(--muted); margin-top: 1px; }
+  .del { color: var(--bad); border: none; background: none; font-size: 20px; padding: 4px; }
+  .empty { color: var(--muted); font-size: 15px; padding: 14px 16px; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .stat-cell { padding: 14px 16px; border-bottom: 1px solid var(--sep); }
+  .stat-cell:nth-child(odd) { border-right: 1px solid var(--sep); }
+  .stat-cell:nth-child(n+3) { border-bottom: none; }
+  .stat-k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .stat-v { font-size: 20px; font-weight: 600; margin-top: 3px; }
+  svg { width: 100%; height: auto; display: block; padding: 4px 0; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); padding: 8px 16px 14px; }
+  .legend span::before { content: "—"; margin-right: 4px; font-weight: 700; }
+  #fab { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+         background: var(--ios-blue); color: #fff; border: none; border-radius: 999px;
+         padding: 15px 26px; font-size: 17px; font-weight: 600; cursor: pointer;
+         box-shadow: 0 8px 24px rgba(0,122,255,.35); }
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: flex-end; justify-content: center; z-index: 10; }
   .modal-bg.open { display: flex; }
-  .modal { background: var(--card); border-radius: 20px 20px 0 0; width: 100%; max-width: 720px; padding: 20px; }
-  .modal h2 { font-size: 1.1rem; margin-bottom: 14px; }
-  .opt { display: flex; align-items: center; gap: 12px; width: 100%; background: var(--card2); color: var(--text); border: 2px solid transparent; border-radius: var(--radius); padding: 16px; font-size: 1.05rem; font-weight: 600; cursor: pointer; margin-bottom: 10px; text-align: left; }
-  .opt.sel { border-color: var(--accent); }
-  .opt .icon { font-size: 1.6rem; }
-  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
-  label { font-size: .85rem; color: var(--muted); }
-  input[type="time"] { height: 46px; background: var(--card2); border: 1px solid #334155; color: var(--text); border-radius: 10px; padding: 10px; font-size: 1rem; }
-  .btn-primary { width: 100%; background: var(--accent); color: #082f49; border: none; border-radius: 12px; padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px; }
-  .btn-ghost { width: 100%; background: transparent; color: var(--muted); border: none; padding: 12px; cursor: pointer; font-size: .9rem; }
-  svg { width: 100%; height: auto; display: block; }
-  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin-top: 8px; }
-  .legend span::before { content: "—"; margin-right: 5px; font-weight: 700; }
+  .sheet { background: var(--bg); border-radius: 14px 14px 0 0; width: 100%; max-width: 500px; padding: 8px 0 calc(20px + env(safe-area-inset-bottom)); animation: slideup .25s ease; }
+  @keyframes slideup { from { transform: translateY(100%);} to { transform: translateY(0);} }
+  .grabber { width: 36px; height: 5px; border-radius: 3px; background: var(--sep); margin: 6px auto 10px; }
+  .sheet-title { font-size: 17px; font-weight: 600; text-align: center; padding: 4px 16px 10px; }
+  .sheet-body { padding: 0 16px; }
+  .opt { display: flex; align-items: center; gap: 12px; width: 100%; background: var(--card); color: var(--text);
+         border: none; border-radius: 12px; padding: 14px 16px; font-size: 17px; cursor: pointer; margin-bottom: 10px; text-align: left; }
+  .opt:active { opacity: .6; }
+  .opt.sel { box-shadow: inset 0 0 0 2px var(--ios-blue); }
+  .btn-primary { width: 100%; background: var(--ios-blue); color: #fff; border: none; border-radius: 12px;
+                 padding: 14px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+  .btn-ghost { width: 100%; background: transparent; color: var(--ios-blue); border: none; padding: 14px; font-size: 17px; cursor: pointer; }
+  .time-row { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 12px; padding: 10px 16px; margin-bottom: 10px; }
+  .time-row label { font-size: 15px; color: var(--muted); flex: 1; }
+  input[type="time"] { border: none; background: transparent; font-size: 17px; color: var(--ios-blue); font-weight: 600; }
+  .note { font-size: 13px; color: var(--muted); padding: 0 4px 8px; }
   .hidden { display: none; }
-  .hist-day { margin-bottom: 12px; }
-  .hist-date { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 10px 0 6px; }
 </style>
 </head>
 <body>
 
-<h1>💊 Medicatie Curve</h1>
-<p class="sub">Indicatieve projectie van methylfenidaat in bloed, op basis van gemiddelde farmacokinetiek.</p>
+<div class="nav-title">Medicatie Curve</div>
+<div class="large-title">💊 Vandaag</div>
 
-<div id="intakes"></div>
+<div class="section-head">Ingenomen vandaag</div>
+<div class="group" id="intakes"></div>
 
 <div id="results" class="hidden">
-  <div class="grid">
-    <div class="stat"><div class="k">Piek(en)</div><div class="v" id="st-peak">–</div></div>
-    <div class="stat"><div class="k">Uitgewerkt om</div><div class="v" id="st-end">–</div></div>
+  <div class="section-head">Schatting</div>
+  <div class="group stat-grid">
+    <div class="stat-cell"><div class="stat-k">Piek(en)</div><div class="stat-v" id="st-peak">–</div></div>
+    <div class="stat-cell"><div class="stat-k">Uitgewerkt om</div><div class="stat-v" id="st-end">–</div></div>
   </div>
-  <div class="card">
+  <div class="section-head">Curve</div>
+  <div class="group">
     <div id="chart"></div>
     <div class="legend" id="legend"></div>
   </div>
 </div>
 
-<h2 style="font-size:1rem;margin:18px 0 10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Geschiedenis</h2>
+<div class="section-head">Geschiedenis</div>
 <div id="history"></div>
 
 <button id="fab" onclick="openModal()">＋ Pil ingenomen</button>
 
 <div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <h2 id="m-title">Welke medicatie?</h2>
-    <div id="m-body"></div>
+  <div class="sheet">
+    <div class="grabber"></div>
+    <div class="sheet-title" id="m-title">Welke medicatie?</div>
+    <div class="sheet-body" id="m-body"></div>
   </div>
 </div>
 
@@ -84,8 +117,8 @@ const DELAY_RETARD = 3.5, DELAY_RETARD_FED = 4.0;
 const WORN_OFF_FRAC = 0.10;
 const CLINICAL_DUR = { medikinet: 7 * 60, ritalin: 3.5 * 60 };
 const MEDS = {
-  medikinet: { name: "Medikinet Retard 10 mg", icon: "💊", hex: "#38bdf8" },
-  ritalin:   { name: "Ritalin 10 mg",            icon: "💉", hex: "#c084fc" },
+  medikinet: { name: "Medikinet Retard 10 mg", icon: "💊", hex: "#007aff" },
+  ritalin:   { name: "Ritalin 10 mg",            icon: "💉", hex: "#af52de" },
 };
 
 function bateman(t, ka) { if (t <= 0) return 0; return Math.exp(-KE*t) - Math.exp(-ka*t); }
@@ -138,25 +171,22 @@ function renderStep() {
     const nowMin = now.getHours()*60 + now.getMinutes();
     if (sel.tMin === null) sel.tMin = nowMin;
     const nowStr = String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
-    title.textContent = m.name + " — wanneer?";
+    title.textContent = m.name;
     body.innerHTML = `
-      <div class="row">
-        <button class="opt ${sel.tMin===nowMin?'sel':''}" style="flex:1" onclick="sel.tMin=${nowMin};renderStep()"><span class="icon">⏱️</span><span>Nu (${nowStr})</span></button>
-      </div>
-      <div class="row">
-        <label>Eerder vandaag om:</label>
+      <button class="opt ${sel.tMin===nowMin?'sel':''}" onclick="sel.tMin=${nowMin};renderStep()"><span class="icon">⏱️</span><span>Nu (${nowStr})</span></button>
+      <div class="time-row"><label>Eerder vandaag om</label>
         <input type="time" value="${timeStr(sel.tMin)}" onchange="const p=this.value.split(':').map(Number);sel.tMin=p[0]*60+p[1];">
       </div>
-      <button class="btn-primary" onclick="step=2;renderStep()">Volgende →</button>
-      <button class="btn-ghost" onclick="step=0;renderStep()">← Terug</button>`;
+      <button class="btn-primary" onclick="step=2;renderStep()">Volgende</button>
+      <button class="btn-ghost" onclick="step=0;renderStep()">Terug</button>`;
   } else {
-    title.textContent = "Heb je gegeten bij de inname?";
+    title.textContent = "Gegeten bij inname?";
     body.innerHTML = `
       <button class="opt ${sel.fed?'sel':''}" onclick="sel.fed=true;renderStep()"><span class="icon">🍽️</span><span>Ja, ik heb gegeten</span></button>
       <button class="opt ${!sel.fed?'sel':''}" onclick="sel.fed=false;renderStep()"><span class="icon">🚫</span><span>Nee, op lege maag</span></button>
-      <p class="sub" style="margin-top:6px">Voedsel vertraagt de opname: de piek komt iets later en is iets lager.</p>
-      <button class="btn-primary" onclick="addIntake()">✓ Toevoegen</button>
-      <button class="btn-ghost" onclick="step=1;renderStep()">← Terug</button>`;
+      <p class="note">Voedsel vertraagt de opname: piek iets later en lager.</p>
+      <button class="btn-primary" onclick="addIntake()">Opslaan</button>
+      <button class="btn-ghost" onclick="step=1;renderStep()">Terug</button>`;
   }
 }
 
@@ -181,13 +211,13 @@ function renderAll() {
   const box = document.getElementById("intakes");
   box.innerHTML = intakes.length ? intakes.map(ik => {
     const m = MEDS[ik.type];
-    return `<div class="chip" style="border-left-color:${m.hex}">
-      <span class="icon">${m.icon}</span>
+    return `<div class="row-item">
+      <span class="icon" style="color:${m.hex}">${m.icon}</span>
       <div class="grow"><div class="t">${m.name}</div>
       <div class="d">${timeStr(ik.tMin)} · ${ik.fed ? "🍽️ gegeten" : "op lege maag"}</div></div>
-      <button onclick="removeIntake('${ik.id}')">✕</button>
+      <button class="del" onclick="removeIntake('${ik.id}')">✕</button>
     </div>`;
-  }).join("") : '<p class="sub">Nog geen inname vandaag. Tik onderaan op "＋ Pil ingenomen".</p>';
+  }).join("") : '<div class="empty">Nog geen inname vandaag.</div>';
 
   if (!intakes.length) { document.getElementById("results").classList.add("hidden"); return; }
   document.getElementById("results").classList.remove("hidden");
@@ -219,15 +249,20 @@ function renderAll() {
   const clinEnd = Math.max(...intakes.map(i => i.tMin + CLINICAL_DUR[i.type]));
 
   document.getElementById("st-peak").textContent = peakInfo.map(p => timeStr(p.t)).join(" · ");
-  document.getElementById("st-end").textContent = timeStr(clinEnd) + " (klinisch) · " + timeStr(endT) + " (plasma)";
+  document.getElementById("st-end").textContent = timeStr(clinEnd) + " / " + timeStr(endT);
 
-  const W = 700, H = 260, padL = 40, padR = 12, padT = 18, padB = 30;
+  const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const gridC = isDark ? "#38383a" : "#e5e5ea";
+  const lblC = isDark ? "#8e8e93" : "#8e8e93";
+  const totC = isDark ? "#ffffff" : "#000000";
+
+  const W = 700, H = 240, padL = 40, padR = 12, padT = 16, padB = 28;
   const x = t => padL + (t - t0)/(t1 - t0) * (W - padL - padR);
   const y = c => H - padB - (c/max) * (H - padT - padB);
   let grid = "";
   for (let t = Math.ceil(t0/60)*60; t <= t1; t += 60) {
-    grid += `<line x1="${x(t)}" y1="${padT}" x2="${x(t)}" y2="${H-padB}" stroke="#334155"/>
-             <text x="${x(t)}" y="${H-10}" fill="#94a3b8" font-size="10" text-anchor="middle">${timeStr(t)}</text>`;
+    grid += `<line x1="${x(t)}" y1="${padT}" x2="${x(t)}" y2="${H-padB}" stroke="${gridC}"/>
+             <text x="${x(t)}" y="${H-8}" fill="${lblC}" font-size="10" text-anchor="middle" font-family="-apple-system">${timeStr(t)}</text>`;
   }
   let paths = "";
   per.forEach((arr, j) => {
@@ -236,27 +271,27 @@ function renderAll() {
     paths += `<path d="${d}" fill="none" stroke="${m.hex}" stroke-width="2.5"/>`;
     const p = peakInfo[j];
     paths += `<circle cx="${x(p.t)}" cy="${y(p.c)}" r="5" fill="${m.hex}"/>
-             <text x="${x(p.t)}" y="${y(p.c)-10}" fill="${m.hex}" font-size="11" text-anchor="middle">${timeStr(p.t)}</text>`;
+             <text x="${x(p.t)}" y="${y(p.c)-10}" fill="${m.hex}" font-size="11" text-anchor="middle" font-family="-apple-system">${timeStr(p.t)}</text>`;
   });
   const dTot = total.map((v,i) => (i?"L":"M") + x(v.t).toFixed(1) + "," + y(v.c).toFixed(1)).join(" ");
   const now = new Date(); const nowMin = now.getHours()*60 + now.getMinutes();
   const nowLine = (t0 <= nowMin && nowMin <= t1)
-    ? `<line x1="${x(nowMin)}" y1="${padT}" x2="${x(nowMin)}" y2="${H-padB}" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,4"/>
-       <text x="${x(nowMin)}" y="${padT+12}" fill="#4ade80" font-size="11" text-anchor="middle">nu</text>` : "";
-  const endMark = `<line x1="${x(endT)}" y1="${padT}" x2="${x(endT)}" y2="${H-padB}" stroke="#f87171" stroke-width="2" stroke-dasharray="3,4"/>
-     <text x="${x(endT)}" y="${H-10}" fill="#f87171" font-size="10" text-anchor="middle">${timeStr(endT)}</text>`;
-  const clinMark = clinEnd <= t1 ? `<line x1="${x(clinEnd)}" y1="${padT}" x2="${x(clinEnd)}" y2="${H-padB}" stroke="#fbbf24" stroke-width="2" stroke-dasharray="2,3"/>
-     <text x="${x(clinEnd)}" y="${padT+24}" fill="#fbbf24" font-size="10" text-anchor="middle">${timeStr(clinEnd)} klinisch</text>` : "";
+    ? `<line x1="${x(nowMin)}" y1="${padT}" x2="${x(nowMin)}" y2="${H-padB}" stroke="#34c759" stroke-width="2" stroke-dasharray="5,4"/>
+       <text x="${x(nowMin)}" y="${padT+12}" fill="#34c759" font-size="11" text-anchor="middle" font-family="-apple-system">nu</text>` : "";
+  const endMark = `<line x1="${x(endT)}" y1="${padT}" x2="${x(endT)}" y2="${H-padB}" stroke="#ff3b30" stroke-width="2" stroke-dasharray="3,4"/>
+     <text x="${x(endT)}" y="${H-8}" fill="#ff3b30" font-size="10" text-anchor="middle" font-family="-apple-system">${timeStr(endT)}</text>`;
+  const clinMark = clinEnd <= t1 ? `<line x1="${x(clinEnd)}" y1="${padT}" x2="${x(clinEnd)}" y2="${H-padB}" stroke="#ff9500" stroke-width="2" stroke-dasharray="2,3"/>
+     <text x="${x(clinEnd)}" y="${padT+24}" fill="#ff9500" font-size="10" text-anchor="middle" font-family="-apple-system">${timeStr(clinEnd)}</text>` : "";
 
   document.getElementById("chart").innerHTML =
     `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
       ${grid}
-      <path d="${dTot}" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
+      <path d="${dTot}" fill="none" stroke="${totC}" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.5"/>
       ${paths}${nowLine}${endMark}${clinMark}
     </svg>`;
   document.getElementById("legend").innerHTML =
     intakes.map(ik => `<span style="color:${MEDS[ik.type].hex}">${MEDS[ik.type].icon} ${timeStr(ik.tMin)}</span>`).join("") +
-    `<span style="color:#e2e8f0">totale curve</span><span style="color:var(--good)">nu</span><span style="color:var(--warn)">klinisch uitgewerkt</span><span style="color:var(--bad)">plasma <10%</span>`;
+    `<span style="color:${totC}">totaal</span><span style="color:#34c759">nu</span><span style="color:#ff9500">klinisch</span><span style="color:#ff3b30">plasma &lt;10%</span>`;
 }
 
 function fmtDay(key) {
@@ -272,17 +307,17 @@ function renderHistory() {
   if (!box) return;
   const days = Object.keys(log).filter(k => log[k] && log[k].length).sort().reverse();
   box.innerHTML = days.length ? days.map(k => `
-    <div class="hist-day">
-      <div class="hist-date">${fmtDay(k)}</div>
+    <div class="section-head" style="padding-top:8px">${fmtDay(k)}</div>
+    <div class="group">
       ${[...log[k]].sort((a,b)=>b.tMin-a.tMin).map(ik => {
         const m = MEDS[ik.type];
-        return `<div class="chip" style="border-left-color:${m.hex}">
-          <span class="icon">${m.icon}</span>
+        return `<div class="row-item">
+          <span class="icon" style="color:${m.hex}">${m.icon}</span>
           <div class="grow"><div class="t">${m.name}</div>
           <div class="d">${timeStr(ik.tMin)} · ${ik.fed ? "🍽️ gegeten" : "op lege maag"}</div></div>
         </div>`;
       }).join("")}
-    </div>`).join("") : '<p class="sub">Nog geen geschiedenis.</p>';
+    </div>`).join("") : '<div class="group"><div class="empty">Nog geen geschiedenis.</div></div>';
 }
 
 renderAll();
