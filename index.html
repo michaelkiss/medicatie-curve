@@ -52,7 +52,7 @@
 <h1>💊 Medicatie Curve</h1>
 <p class="sub">Indicatieve projectie van methylfenidaat in bloed, op basis van gemiddelde farmacokinetiek.</p>
 
-<div id="intakes\"></div>
+<div id="intakes"></div>
 
 <div id="results" class="hidden">
   <div class="grid">
@@ -101,15 +101,18 @@ function intakeCurve(ik, tMin) {
 function todayKey() { return new Date().toISOString().slice(0,10); }
 function loadLog() {
   try {
-    const d = JSON.parse(localStorage.getItem("medcurve") || "{}");
-    if (d.log) return d.log;
-    if (d.date && d.intakes) return { [d.date]: d.intakes };
-    return {};
+    const raw = JSON.parse(localStorage.getItem("medcurve") || "{}");
+    const log = raw.log || {};
+    if (raw.date && Array.isArray(raw.intakes)) {
+      (log[raw.date] = log[raw.date] || []).push(...raw.intakes);
+    }
+    return log;
   } catch { return {}; }
 }
 function saveLog(log) { localStorage.setItem("medcurve", JSON.stringify({ log })); }
 let log = loadLog();
-let intakes = log[todayKey()] || [];
+if (!log[todayKey()]) log[todayKey()] = [];
+let intakes = log[todayKey()];
 
 function timeStr(minOfDay) {
   const m = ((Math.round(minOfDay) % 1440) + 1440) % 1440;
