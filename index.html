@@ -19,7 +19,7 @@
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
   .stat { background: var(--card); border-radius: var(--radius); padding: 14px; }
   .stat .k { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
-  .stat .v { font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
+  .stat .v { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
   .chip { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--muted); }
   .chip .icon { font-size: 1.5rem; }
   .chip .grow { flex: 1; }
@@ -57,7 +57,7 @@
 <div id="results" class="hidden">
   <div class="grid">
     <div class="stat"><div class="k">Piek(en)</div><div class="v" id="st-peak">–</div></div>
-    <div class="stat"><div class="k">Geschat uitgewerkt om</div><div class="v" id="st-end">–</div></div>
+    <div class="stat"><div class="k">Uitgewerkt om</div><div class="v" id="st-end">–</div></div>
   </div>
   <div class="card">
     <div id="chart"></div>
@@ -82,6 +82,7 @@ const KE = Math.LN2 / 2.5;
 const KA_FAST = 1.3, KA_FED = 0.65, FED_SCALE = 0.85;
 const DELAY_RETARD = 3.5, DELAY_RETARD_FED = 4.0;
 const WORN_OFF_FRAC = 0.10;
+const CLINICAL_DUR = { medikinet: 7 * 60, ritalin: 3.5 * 60 };
 const MEDS = {
   medikinet: { name: "Medikinet Retard 10 mg", icon: "💊", hex: "#38bdf8" },
   ritalin:   { name: "Ritalin 10 mg",            icon: "💉", hex: "#c084fc" },
@@ -215,9 +216,10 @@ function renderAll() {
     if (total[i].t > gp.t && total[i].c < thresh) { endT = total[i].t; break; }
   }
   if (endT === null) endT = t1;
+  const clinEnd = Math.max(...intakes.map(i => i.tMin + CLINICAL_DUR[i.type]));
 
   document.getElementById("st-peak").textContent = peakInfo.map(p => timeStr(p.t)).join(" · ");
-  document.getElementById("st-end").textContent = timeStr(endT);
+  document.getElementById("st-end").textContent = timeStr(clinEnd) + " (klinisch) · " + timeStr(endT) + " (plasma)";
 
   const W = 700, H = 260, padL = 40, padR = 12, padT = 18, padB = 30;
   const x = t => padL + (t - t0)/(t1 - t0) * (W - padL - padR);
@@ -243,16 +245,18 @@ function renderAll() {
        <text x="${x(nowMin)}" y="${padT+12}" fill="#4ade80" font-size="11" text-anchor="middle">nu</text>` : "";
   const endMark = `<line x1="${x(endT)}" y1="${padT}" x2="${x(endT)}" y2="${H-padB}" stroke="#f87171" stroke-width="2" stroke-dasharray="3,4"/>
      <text x="${x(endT)}" y="${H-10}" fill="#f87171" font-size="10" text-anchor="middle">${timeStr(endT)}</text>`;
+  const clinMark = clinEnd <= t1 ? `<line x1="${x(clinEnd)}" y1="${padT}" x2="${x(clinEnd)}" y2="${H-padB}" stroke="#fbbf24" stroke-width="2" stroke-dasharray="2,3"/>
+     <text x="${x(clinEnd)}" y="${padT+24}" fill="#fbbf24" font-size="10" text-anchor="middle">${timeStr(clinEnd)} klinisch</text>` : "";
 
   document.getElementById("chart").innerHTML =
     `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
       ${grid}
       <path d="${dTot}" fill="none" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6,4" opacity="0.8"/>
-      ${paths}${nowLine}${endMark}
+      ${paths}${nowLine}${endMark}${clinMark}
     </svg>`;
   document.getElementById("legend").innerHTML =
     intakes.map(ik => `<span style="color:${MEDS[ik.type].hex}">${MEDS[ik.type].icon} ${timeStr(ik.tMin)}</span>`).join("") +
-    `<span style="color:#e2e8f0">totale curve</span><span style="color:var(--good)">nu</span><span style="color:var(--bad)">uitgewerkt</span>`;
+    `<span style="color:#e2e8f0">totale curve</span><span style="color:var(--good)">nu</span><span style="color:var(--warn)">klinisch uitgewerkt</span><span style="color:var(--bad)">plasma <10%</span>`;
 }
 
 function fmtDay(key) {
